@@ -7,16 +7,39 @@
 //
 
 #import "ViewController.h"
+#import "CXAlterButton.h"
+#import "CXAlterItemButton.h"
 
-@interface ViewController ()
+@interface ViewController ()<CXAlterButtonDelegate>
 
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+
+    CXAlterButton *button = [[CXAlterButton alloc]initWithImage:[UIImage imageNamed:@"jian"]];
+    
+    CXAlterItemButton *item1 = [[CXAlterItemButton alloc]initWithImage:[UIImage imageNamed:@"item1"]];
+    
+    CXAlterItemButton *item2 = [[CXAlterItemButton alloc]initWithImage:[UIImage imageNamed:@"item2"]];
+    
+    CXAlterItemButton *item3 = [[CXAlterItemButton alloc]initWithImage:[UIImage imageNamed:@"item3"]];
+    
+    [button addButtonItems:@[item1, item2, item3]];
+    
+    button.buttonCenter = CGPointMake(100, 200);
+    button.buttonSize = CGSizeMake(35, 35);
+    button.animationDuration = 0.5;
+    button.delegate = self;
+    [self.view addSubview:button];
+}
+
+- (void)AlterButton:(CXAlterButton *)button clickItemButtonAtIndex:(NSUInteger)index
+{
+    NSLog(@"you clicked  %ld button", index);
 }
 
 - (void)didReceiveMemoryWarning {

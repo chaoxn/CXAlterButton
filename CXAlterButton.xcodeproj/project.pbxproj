@@ -15,6 +15,8 @@
 		ECE4B50C1BE9E1FE0023A427 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECE4B50A1BE9E1FE0023A427 /* LaunchScreen.storyboard */; };
 		ECE4B5171BE9E1FE0023A427 /* CXAlterButtonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE4B5161BE9E1FE0023A427 /* CXAlterButtonTests.m */; };
 		ECE4B5221BE9E1FE0023A427 /* CXAlterButtonUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE4B5211BE9E1FE0023A427 /* CXAlterButtonUITests.m */; };
+		ECE4B5341BE9E2410023A427 /* CXAlterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE4B5311BE9E2410023A427 /* CXAlterButton.m */; };
+		ECE4B5351BE9E2410023A427 /* CXAlterItemButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ECE4B5331BE9E2410023A427 /* CXAlterItemButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,10 @@
 		ECE4B51D1BE9E1FE0023A427 /* CXAlterButtonUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CXAlterButtonUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECE4B5211BE9E1FE0023A427 /* CXAlterButtonUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CXAlterButtonUITests.m; sourceTree = "<group>"; };
 		ECE4B5231BE9E1FE0023A427 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ECE4B5301BE9E2410023A427 /* CXAlterButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXAlterButton.h; sourceTree = "<group>"; };
+		ECE4B5311BE9E2410023A427 /* CXAlterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXAlterButton.m; sourceTree = "<group>"; };
+		ECE4B5321BE9E2410023A427 /* CXAlterItemButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXAlterItemButton.h; sourceTree = "<group>"; };
+		ECE4B5331BE9E2410023A427 /* CXAlterItemButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXAlterItemButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +107,7 @@
 		ECE4B4FB1BE9E1FE0023A427 /* CXAlterButton */ = {
 			isa = PBXGroup;
 			children = (
+				ECE4B52F1BE9E2410023A427 /* CXAlterButton */,
 				ECE4B4FF1BE9E1FE0023A427 /* AppDelegate.h */,
 				ECE4B5001BE9E1FE0023A427 /* AppDelegate.m */,
 				ECE4B5021BE9E1FE0023A427 /* ViewController.h */,
@@ -138,6 +145,17 @@
 				ECE4B5231BE9E1FE0023A427 /* Info.plist */,
 			);
 			path = CXAlterButtonUITests;
+			sourceTree = "<group>";
+		};
+		ECE4B52F1BE9E2410023A427 /* CXAlterButton */ = {
+			isa = PBXGroup;
+			children = (
+				ECE4B5301BE9E2410023A427 /* CXAlterButton.h */,
+				ECE4B5311BE9E2410023A427 /* CXAlterButton.m */,
+				ECE4B5321BE9E2410023A427 /* CXAlterItemButton.h */,
+				ECE4B5331BE9E2410023A427 /* CXAlterItemButton.m */,
+			);
+			path = CXAlterButton;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -271,6 +289,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECE4B5041BE9E1FE0023A427 /* ViewController.m in Sources */,
+				ECE4B5341BE9E2410023A427 /* CXAlterButton.m in Sources */,
+				ECE4B5351BE9E2410023A427 /* CXAlterItemButton.m in Sources */,
 				ECE4B5011BE9E1FE0023A427 /* AppDelegate.m in Sources */,
 				ECE4B4FE1BE9E1FE0023A427 /* main.m in Sources */,
 			);
