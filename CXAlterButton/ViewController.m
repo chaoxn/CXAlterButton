@@ -20,7 +20,7 @@
     
     [super viewDidLoad];
 
-    CXAlterButton *button = [[CXAlterButton alloc]initWithImage:[UIImage imageNamed:@"jian"]];
+    CXAlterButton *button = [[CXAlterButton alloc]initWithImage:[UIImage imageNamed:@"add"]highLightImage:[UIImage imageNamed:@"add-Highed"] Direction:DirectionTypeDown];
     
     CXAlterItemButton *item1 = [[CXAlterItemButton alloc]initWithImage:[UIImage imageNamed:@"item1"]];
     
@@ -30,8 +30,8 @@
     
     [button addButtonItems:@[item1, item2, item3]];
     
-    button.buttonCenter = CGPointMake(100, 200);
-    button.buttonSize = CGSizeMake(35, 35);
+    button.buttonCenter = CGPointMake(self.view.frame.size.width/2-20, 100);
+    button.buttonSize = CGSizeMake(40, 40);
     button.animationDuration = 0.5;
     button.delegate = self;
     [self.view addSubview:button];

@@ -2,7 +2,7 @@
 //  CXAlterButton.m
 //  AlterButtonDemo
 //
-//  Created by fizz on 15/11/2.
+//  Created by fizz on 15/11/3.
 //  Copyright © 2015年 chaox. All rights reserved.
 //
 
@@ -13,29 +13,34 @@
 
 @interface CXAlterButton()<CXAlterItemButtonDelegate>
 
-@property (strong, nonatomic) UIImage *centerImage;
+@property (nonatomic, strong) UIImage *centerImage;
+@property (nonatomic, strong) UIImage *highLightImage;
+
 @property (nonatomic, strong) UIButton *centerButton;
+
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, strong) NSMutableArray *keyArr;
+
 @property (nonatomic, strong) UIView *buttonBGView;
+@property (nonatomic, strong) UIView *coverView;
 
 @end
 
 @implementation CXAlterButton
 
 #pragma mark- publicMethod
-- (instancetype)initWithImage :(UIImage *)centerImage{
-    
+- (instancetype)initWithImage :(UIImage *)centerImage highLightImage:(UIImage *)higheLightImage Direction :(DirectionType )directionType
+{
     if (self = [super init]) {
         
         self.centerImage = centerImage;
-        
+        self.highLightImage = higheLightImage;
+        self.directionType = directionType;
+    
         self.items = [NSMutableArray array];
         self.keyArr = [NSMutableArray array];
 
         self.frame = CGRectMake(0, 0,ScreenWidth,ScreenHeight);
-        
-//        _animationDuration = 0.5;
     
         [self initViews];
     }
@@ -97,12 +102,26 @@
     self.centerButton = ({
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         [button setBackgroundImage:self.centerImage forState:UIControlStateNormal];
+        [button setBackgroundImage:self.highLightImage forState:UIControlStateSelected];
         [button addTarget:self action:@selector(rollAction:) forControlEvents:UIControlEventTouchUpInside];
         button.frame = CGRectMake(0, 0, 40, 40);
         button;
     });
     [self.buttonBGView addSubview:self.centerButton];
     [self addSubview:self.buttonBGView];
+    
+    self.coverView = ({
+        UIView *view = [[UIView alloc]initWithFrame:({
+            CGRect frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
+            frame;
+        })];
+        view.alpha = 0;
+        view.userInteractionEnabled = YES;
+        view.backgroundColor = [UIColor blackColor];
+        view;
+    });
+    [self addSubview:self.coverView];
+    [self insertSubview:self.coverView belowSubview:self.buttonBGView];
 }
 
 - (void)rollAction:(UIButton *)sender
@@ -120,13 +139,20 @@
 
 #pragma mark- buttonClicked
 
-// FIXMI:- 展开needFix 
 - (void)centerButtonOpen
 {
+    [self showAnimatonWithSeleted:M_PI_4];
     [CATransaction begin];
     [CATransaction setAnimationDuration:0.5];
-    [self showAnimatonWithSeleted:M_PI_4];
-
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0618 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [UIView animateWithDuration:self.animationDuration animations:^{
+            
+            self.coverView.alpha = 0.618;
+        }];
+    });
+    
     for (int i = 0;  i < self.items.count; i++) {
         
         CXAlterItemButton *itemButton = self.items[i];
@@ -134,17 +160,35 @@
         
         [CATransaction setCompletionBlock:^{
             
-//            for (CXAlterItemButton *itemButton in self.items) {
+            for (CXAlterItemButton *itemButton in self.items) {
                 itemButton.transform = CGAffineTransformIdentity;
                 itemButton.alpha = 1;
-//            }
+            }
          
         }];
         
         CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
         
         CGPoint originPosition = self.buttonBGView.center;
-        CGPoint finalPosition = CGPointMake(self.buttonBGView.center.x, self.buttonBGView.center.y + (i+1)*80);
+         CGPoint finalPosition = CGPointZero;
+        
+        switch (self.directionType) {
+                
+            case DirectionTypeDown:
+                finalPosition = CGPointMake(self.buttonBGView.center.x , self.buttonBGView.center.y+ (i+1)*80);
+                break;
+            case DirectionTypeUp:
+                finalPosition = CGPointMake(self.buttonBGView.center.x , self.buttonBGView.center.y- (i+1)*80);
+                break;
+            case DirectionTypeLeft:
+                finalPosition = CGPointMake(self.buttonBGView.center.x - (i+1)*60 , self.buttonBGView.center.y);
+                break;
+            case DirectionTypeRight:
+                finalPosition = CGPointMake(self.buttonBGView.center.x + (i+1)*60 , self.buttonBGView.center.y);
+                break;
+            default:
+                break;
+        }
         
         positionAnimation.duration = _animationDuration;
         positionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -158,59 +202,35 @@
         [itemButton.layer addAnimation:positionAnimation forKey:@"positionAnimation"];
         
         itemButton.layer.position = finalPosition;
-
-        [CATransaction commit];
+        
+        CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        
+        scaleAnimation.duration = _animationDuration;
+        scaleAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        scaleAnimation.fromValue = [NSNumber numberWithFloat:0.01f];
+        scaleAnimation.toValue = [NSNumber numberWithFloat:1.f];
+        scaleAnimation.beginTime = CACurrentMediaTime() + (_animationDuration/(float)_items.count * (float)i) + 0.03f;
+        scaleAnimation.fillMode = kCAFillModeForwards;
+        scaleAnimation.removedOnCompletion = NO;
+        
+        [itemButton.layer addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+        itemButton.transform = CGAffineTransformMakeScale(0.01f, 0.01f);
+        
     }
+    [CATransaction commit];
 }
-
-- (void)closeAnimation
-{
-     [self showAnimatonWithSeleted:0];
-        for (int i = (int)self.items.count - 1; i>=0; i--) {
-            
-            CXAlterItemButton *button = self.items[i];
-            [UIView animateWithDuration:0.2
-                             animations:^{
-                                 
-                                 button.center = self.buttonBGView.center;
-                                 button.alpha = 0;
-                             }];
-                }
-}
-
-/**
- *  KeyAnimation
- *
- *  @param i index
- *
- *  @return KeyAnimation
- */
-/*
-- (CAKeyframeAnimation *)openKeyAnimation:(int)i
-{
-    CAKeyframeAnimation *keyframeAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
-    
-    NSValue *key = [NSValue valueWithCGPoint:CGPointMake(_buttonBGView.center.x, 300 + (i+1)*100)];
-    [self.keyArr addObject:key];
-    
-    keyframeAnimation.values=[NSArray arrayWithArray:self.keyArr];
-
-    keyframeAnimation.duration=0.5;
-    keyframeAnimation.beginTime=CACurrentMediaTime()+(1/(float)self.items.count * (float)i);
-    keyframeAnimation.fillMode =kCAFillModeForwards;
-    keyframeAnimation.removedOnCompletion = NO;
-    keyframeAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    
-    return keyframeAnimation;
-}
-*/
 
 #pragma mark- buttonUnclicked
 - (void)centerButtonClosed
 {
-    [CATransaction begin];
     [self showAnimatonWithSeleted:0];
+    [CATransaction begin];
     [CATransaction setAnimationDuration:_animationDuration];
+    
+    [UIView animateWithDuration:1 animations:^{
+        
+        self.coverView.alpha = 0;
+    }];
     
     [CATransaction setCompletionBlock:^{
         
@@ -223,6 +243,20 @@
     for (int i = (int)self.items.count - 1; i>=0; i--) {
         
         CXAlterItemButton *button = self.items[i];
+        
+        CABasicAnimation *scaleAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        
+        scaleAnimation.duration = _animationDuration;
+        scaleAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        scaleAnimation.fromValue = [NSNumber numberWithFloat:1.f];
+        scaleAnimation.toValue = [NSNumber numberWithFloat:0.01f];
+        scaleAnimation.beginTime = CACurrentMediaTime() + (_animationDuration/(float)_items.count * (float)i) + 0.03;
+        scaleAnimation.fillMode = kCAFillModeForwards;
+        scaleAnimation.removedOnCompletion = NO;
+        
+        [button.layer addAnimation:scaleAnimation forKey:@"scaleAnimation"];
+        
+        button.transform = CGAffineTransformMakeScale(1.f, 1.f);
         
         CABasicAnimation *positionAnimation = [CABasicAnimation animationWithKeyPath:@"position"];
         
@@ -282,20 +316,20 @@
         
         [UIView animateWithDuration:0.0618f * 3
                          animations:^{
-                             selectedButton.transform = CGAffineTransformMakeScale(3, 3);
+                             selectedButton.transform = CGAffineTransformMakeScale(5, 5);
                              selectedButton.alpha = 0.0f;
                          }];
 
-        for (int i = 0; i < self.items.count; i++) {
-            if (i == selectedButton.index) {
-                continue;
-            }
-            CXAlterItemButton *unselectedButton = self.items[i];
-            [UIView animateWithDuration:0.0618f * 2
-                             animations:^{
-                                 unselectedButton.transform = CGAffineTransformMakeScale(0, 0);
-                             }];
-        }
+//        for (int i = 0; i < self.items.count; i++) {
+//            if (i == selectedButton.index) {
+//                continue;
+//            }
+//            CXAlterItemButton *unselectedButton = self.items[i];
+//            [UIView animateWithDuration:0.0618f * 2
+//                             animations:^{
+//                                 unselectedButton.transform = CGAffineTransformMakeScale(0, 0);
+//                             }];
+//        }
         
         [self.delegate AlterButton:self clickItemButtonAtIndex:itemButton.index];
         
