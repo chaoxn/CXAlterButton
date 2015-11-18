@@ -1,6 +1,6 @@
 //
 //  CXAlterButton.h
-//  AlterButtonDemo
+//  CXAlterButton
 //
 //  Created by fizz on 15/11/3.
 //  Copyright © 2015年 chaox. All rights reserved.

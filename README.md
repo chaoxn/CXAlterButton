@@ -1,16 +1,19 @@
 # CXAlterButton
 
-## Introduction : **可以弹出多个子按钮的button**
-#####可以自定义按钮的图片位置大小以及字按钮的方向
+## Introduction : 
 
+#####An alterButton you can define it's frame,size,image,direction.
+<br>
 ![dong](http://7xnqnj.com1.z0.glb.clouddn.com/Untitled.gif)
 
 ## How to use:
 
-引入头文件<p>
+<p>
 ```#import "CXAlterButton.h"```
 
-创建CXAlterButton,并添加到view上<p>
+
+create CXAlterButton and CXAlterItemButton
+<p>
 
     CXAlterButton *button = [[CXAlterButton alloc]initWithImage:[UIImage imageNamed:@"add"]highLightImage:[UIImage imageNamed:@"add-Highed"] Direction:DirectionTypeDown];
     
@@ -29,7 +32,7 @@
     [self.view addSubview:button];
 
 
-实现代理<p>
+<p>Implement protocol method
 
 ```
 - (void)AlterButton:(CXAlterButton *)button clickItemButtonAtIndex:(NSUInteger)index
@@ -39,5 +42,4 @@
 ```
 <p>
 <p>
-***
- **还有很多不足 会陆续修改commit**
+
